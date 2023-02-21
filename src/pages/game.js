@@ -5,7 +5,7 @@ export default function Game() {
     return (
         <>
             <Head>
-                <title>Game</title>
+                <title>Play</title>
             </Head>
             <main>
                 <Link
