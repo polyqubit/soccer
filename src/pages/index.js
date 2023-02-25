@@ -116,6 +116,19 @@ export default function Home() {
               with&nbsp;Vercel.
             </p>
           </a>
+
+          <a
+          href="/api/users"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2 className={inter.className}>
+            API <span>-&gt;</span>
+          </h2>
+          <p className={inter.className}>
+            Testing MongoDB.
+          </p>
+        </a>
         </div>
       </main>
     </>
