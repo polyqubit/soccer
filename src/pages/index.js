@@ -118,7 +118,7 @@ export default function Home() {
           </a>
 
           <a
-          href="/api/users"
+          href="/api/findUser"
           className={styles.card}
           rel="noopener noreferrer"
         >
