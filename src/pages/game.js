@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
+import React from 'react'
+import { useState } from 'react'
 import styles from '../styles/Game.module.css'
 import aron from '@public/hanoolapirplane.jpg'
 
@@ -34,4 +36,8 @@ export default function Game() {
             </main>
         </>
     )
+}
+
+export default function CreateUser() {
+    const [name, setName] = useState("")
 }
