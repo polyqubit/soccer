@@ -1,5 +1,8 @@
-import Head from "next/head"
-import Link from "next/link"
+import Head from 'next/head'
+import Link from 'next/link'
+import Image from 'next/image'
+import styles from '../styles/Game.module.css'
+import aron from '@public/hanoolapirplane.jpg'
 
 export default function Game() {
     return (
@@ -7,15 +10,27 @@ export default function Game() {
             <Head>
                 <title>Play</title>
             </Head>
-            <main>
+            <main className={styles.body}>
                 <Link
                     href="/"
+                    className={styles.back}
                 >
                     &lt;Title screen
                 </Link>
-                <p>
-                    Hi this is game
+                
+                <p className={styles.body}>
+                    Hi this is game<br />The game will be developed sometime in the near future, stay tuned!
                 </p>
+
+                <div className={styles.imgContainer}>
+                    <Image
+                        src={aron}
+                        width={100}
+                        height={100}
+                        alt="hanoolito"
+                        className={styles.img}
+                    />
+                </div>
             </main>
         </>
     )

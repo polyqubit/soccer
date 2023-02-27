@@ -1,0 +1,31 @@
+.body {
+    font-family: var(--font-mono);
+    position: relative;
+    clear: both;
+}
+
+.back {
+    background-color: white;
+    padding: 10px;
+    color: black;
+    float: left;
+}
+
+.imgContainer {
+    padding: 20px;
+    width: 140px;
+    transition: 1s;
+    background-image: linear-gradient(to bottom right, gray, black);
+}
+
+.imgContainer:hover {
+    width: 1140px;
+}
+
+.img {
+    transition: width 1s;
+}
+
+.img:hover {
+    width: 1000px;
+}
