@@ -3,10 +3,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
 import { useState } from 'react'
-import styles from '../styles/Game.module.css'
+import styles from '@styles/Game.module.css'
 import aron from '@public/hanoolapirplane.jpg'
 
-export default function Game() {
+export default function Game(user) {
     return (
         <>
             <Head>
@@ -33,11 +33,9 @@ export default function Game() {
                         className={styles.img}
                     />
                 </div>
+
+                
             </main>
         </>
     )
-}
-
-export default function CreateUser() {
-    const [name, setName] = useState("")
 }

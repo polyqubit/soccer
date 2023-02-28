@@ -24,9 +24,10 @@ export default async (req, res) => {
     try {
         const client = await clientPromise
         const db = client.db('data')
+        const { name } = req.query
 
         const user = await db.collection('users')
-            .find({ name: "init" })
+            .find({ name: name })
             .map(user => ({ ...user, _id: user._id.toString() }))
             .toArray()
         return res.status(200).json({ user })
