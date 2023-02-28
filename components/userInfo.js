@@ -1,5 +1,19 @@
 import styles from './layout.module.css'
+import Image from 'next/image'
+import soc from '@public/soccball.png'
 
-export default function UserInfo({ children }) {
-    return <div className={styles.container}>{children}</div>;
+// children : stats
+// imgID : profile pic
+export default function UserInfo(props) {
+    return(
+        <div className={styles.container}>
+            <Image 
+                src={soc}
+                width={400}
+                height={400}
+                alt='wenomechainsuma'
+            />
+            {props.children}
+        </div>
+    )
 }
