@@ -8,7 +8,7 @@ export default function UserInfo(props) {
     return(
         <div className={styles.container}>
             <Image 
-                src={soc}
+                src={soc} //change to props.src?
                 width={400}
                 height={400}
                 alt='wenomechainsuma'
