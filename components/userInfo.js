@@ -1,4 +1,4 @@
-import styles from './layout.module.css'
+import styles from './userInfo.module.css'
 import Image from 'next/image'
 import soc from '@public/soccball.png'
 
@@ -9,8 +9,8 @@ export default function UserInfo(props) {
         <div className={styles.container}>
             <Image 
                 src={soc} //change to props.src?
-                width={400}
-                height={400}
+                width={100}
+                height={100}
                 alt='wenomechainsuma'
             />
             {props.children}

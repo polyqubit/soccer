@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import React from 'react'
-import { useState } from 'react'
+import UserInfo from '@/components/userInfo'
 import styles from '@styles/Game.module.css'
 import aron from '@public/hanoolapirplane.jpg'
 
@@ -34,6 +33,9 @@ export default function Game(user) {
                     />
                 </div>
 
+                <UserInfo>
+                    <p>wenomechainsuma</p>
+                </UserInfo>
                 
             </main>
         </>
