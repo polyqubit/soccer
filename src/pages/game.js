@@ -23,17 +23,13 @@ export default function Game(user) {
                     Hi this is game<br />The game will be developed sometime in the near future, stay tuned!
                 </p>
 
-                <div className={styles.imgContainer}>
-                    <Image
-                        src={aron}
-                        width={100}
-                        height={100}
-                        alt="hanoolito"
-                        className={styles.img}
-                    />
-                </div>
-
-                <UserInfo>
+                <UserInfo
+                    imgID={aron}
+                >
+                    <p>wenomechainsuma</p>
+                    <p>wenomechainsuma</p>
+                    <p>wenomechainsuma</p>
+                    <p>wenomechainsuma</p>
                     <p>wenomechainsuma</p>
                 </UserInfo>
                 
