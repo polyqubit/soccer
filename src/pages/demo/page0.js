@@ -20,6 +20,7 @@ export default function Page0() {
                     }}
                 >
                     <ambientLight intensity={0.2} />
+                    <pointLight position={[1,2,0]} intensity={0.5}/>
                     <mesh>
                         <sphereGeometry />
                         <meshStandardMaterial />
