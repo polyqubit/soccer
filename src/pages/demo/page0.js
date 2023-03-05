@@ -9,7 +9,9 @@ export default function Page0() {
             <title>Demo</title>
         </Head>
         <main>
-            <div>
+            <div
+                className={styles.scene}
+            >
                 <Canvas
                     shadows={false}
                     className={styles.canvas}
