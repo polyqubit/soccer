@@ -11,21 +11,17 @@
     float: left;
 }
 
-.imgContainer {
-    padding: 20px;
-    width: 140px;
-    transition: 1s;
-    background-image: linear-gradient(to bottom right, gray, black);
+.testButton {
+    position: relative;
+    font-size: larger;
+    margin-top: 1%;
 }
 
-.imgContainer:hover {
-    width: 1140px;
+.canvas {
+    background: rgb(39, 39, 39);
 }
 
-.img {
-    transition: width 1s;
-}
-
-.img:hover {
-    width: 1000px;
+.scene {
+    height: 100%;
+    width: 80%;
 }
