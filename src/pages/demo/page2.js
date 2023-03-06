@@ -2,8 +2,8 @@ import Head from "next/head";
 import DemoNavigation from "@/components/demonav";
 import useKeyboard from "@/components/useKeyboard";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrthographicCamera } from "@react-three/drei";
-import { useRef, useState, useMemo, useEffect } from "react";
+import { OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { useRef, useState, useMemo } from "react";
 import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 import clientPromise from "@/lib/mongodb";
@@ -44,12 +44,13 @@ export default function Page1({user}) {
                         bottom={-2}
                         position={[0, 0, 8]}
                     />
-                    <User setText={setText} text={user}/>
+                    <OrbitControls />
+                    <User setText={setText} text={user} side={DoubleSide}/>
                     {/* <mesh position={[0, 1, 0]}>
                         <boxGeometry args={[0.4, 0.4, 0.4]} />
                         <meshStandardMaterial color="green" side={DoubleSide}/>
                     </mesh> */}
-                    <CreateUser />
+                    <CreateUser/>
                 </Canvas>
             </div>
             <DemoNavigation
@@ -111,7 +112,7 @@ function CreateUser(props) {
     useFrame((_, delta) => {
         mesh.current.rotation.z += delta
         const intersections = raycast()
-        if((intersections.length === 1) && (touched === 0)) {
+        if((intersections.length > 0) && (touched === 0)) {
             setTouched(1)
             console.log(props.text)
             //console.log(user["<value>"])
