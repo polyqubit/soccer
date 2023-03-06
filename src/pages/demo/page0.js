@@ -1,7 +1,7 @@
 import Head from "next/head";
 import DemoNavigation from "@/components/demonav";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera } from "@react-three/drei";
+import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import styles from "@styles/Demo.module.css"
 import { useRef } from "react";
 
@@ -44,14 +44,15 @@ export default function Page0() {
                         <meshStandardMaterial />
                     </mesh>
                     <Donut />
+                    <OrbitControls />
                     <OrthographicCamera 
                         makeDefault
-                        left={-710}
-                        right={710}
-                        top={370}
-                        bottom={-370}
-                        near={0.1}
-                        far={1000}
+                        zoom={1}
+                        left={-5}
+                        right={5}
+                        top={2}
+                        bottom={-2}
+                        position={[0,0,2]}
                     />
                 </Canvas>
             </div>
@@ -62,7 +63,7 @@ export default function Page0() {
 
 function Donut(props) {
     const mesh = useRef()
-    useFrame((state, delta) => (mesh.current.rotation.x += delta))
+    useFrame((state, delta) => (mesh.current = delta))
     return <>
         <mesh
             {...props}
