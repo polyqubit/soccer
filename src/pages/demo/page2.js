@@ -45,43 +45,21 @@ export default function Page1({user}) {
                         position={[0, 0, 8]}
                     />
                     <User setText={setText} text={user}/>
-                    <mesh position={[0, 1, 0]}>
+                    {/* <mesh position={[0, 1, 0]}>
                         <boxGeometry args={[0.4, 0.4, 0.4]} />
                         <meshStandardMaterial color="green" side={DoubleSide}/>
-                    </mesh>
+                    </mesh> */}
+                    <CreateUser />
                 </Canvas>
             </div>
             <DemoNavigation
-                back="/demo/page0"
-                forward="/demo/page2"
-                words="api get"
+                back="/demo/page1"
+                forward="/"
+                words="create/delete user"
             />
         </main>
     </>
 }
-
-// async function getUser(name) {
-//     const info = await fetch("../api/findUser?name="+name)
-//         .then(response => response.json())
-//         .then(response => JSON.stringify(response))
-//     return { info: info}
-// }
-
-// async function getUser(name) {
-
-//     let loginData = await fetch("../api/findUser?name="+name, { method : 'POST' }) // headers : headerParams, body: bodyParams 
-//         .then((response) => response.json())
-//         .then(data => {
-//             //return data['retrieve-agent'];
-//             return data
-//         });
-//     // console.log('loginData ===>', loginData.agent);
-//     return {
-//         type: 'GET_AGENT_DETAILS',
-//         payload: loginData
-//     }
-
-// }
 
 export async function getServerSideProps() {
     try {
@@ -105,48 +83,12 @@ export async function getServerSideProps() {
 function User(props) {
     const mesh = useRef(null)
     const keyMap = useKeyboard()
-    const raycast = useForwardRaycast(mesh)
-    const [touched, setTouched] = useState(0)
-
-    //const { payload } = getUser("init2")
-
-    // const [data, setData] = useState();
-
-    // useEffect(() => {
-    //     fetch("../api/findUser?name="+"init").then(response => {
-    //         setData(response.json())
-    //     })
-    // }, [])
-
-    // const handleGetUser = async (name) => {
-    //     try {
-    //         let response = await fetch("http://localhost:3000/api/findUser?id=" + name);
-    //         response = await response.json();
-    //         return response
-    //     } catch (error) {
-    //         console.log("An error occurred while fetching ", error);
-    //     }
-    // };
 
     useFrame((_, delta) => {
         keyMap['KeyA'] && (mesh.current.position.x -= 3 * delta)
         keyMap['KeyD'] && (mesh.current.position.x += 3 * delta)
         keyMap['KeyW'] && (mesh.current.position.y += 3 * delta)
         keyMap['KeyS'] && (mesh.current.position.y -= 3 * delta)
-        const intersections = raycast()
-        if((intersections.length === 1) && (touched === 0)) {
-            setTouched(1)
-            console.log(props.text)
-            //console.log(user["<value>"])
-            props.setText(
-                <p>
-                    name: {props.text[0].name}<br/>
-                    password: comp sci jeopardy 5-50(what is encrpytion??)<br/>
-                    high score: {props.text[0].sc}
-                </p>
-            )
-            console.log("complete")
-        }
     })
 
     return <>
@@ -157,6 +99,39 @@ function User(props) {
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
             <meshStandardMaterial color="white" />
+        </mesh>
+    </>
+}
+
+function CreateUser(props) {
+    const mesh = useRef(null)
+    const raycast = useForwardRaycast(mesh)
+    const [touched, setTouched] = useState(0)
+
+    useFrame((_, delta) => {
+        mesh.current.rotation.z += delta
+        const intersections = raycast()
+        if((intersections.length === 1) && (touched === 0)) {
+            setTouched(1)
+            console.log(props.text)
+            //console.log(user["<value>"])
+            props.setText(
+                <p>
+                    created user!
+                </p>
+            )
+            console.log("complete")
+        }
+    })
+
+    return <>
+        <mesh
+            {...props}
+            ref={mesh}
+            position={[-1, 1, 0]}
+        >
+            <boxGeometry args={[0.4, 0.4, 0.4]} />
+            <meshStandardMaterial color="blue" />
         </mesh>
     </>
 }
