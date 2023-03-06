@@ -8,7 +8,7 @@ import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 
 export default function Page0() {
-    const [text, setText] = useState(<p>hi</p>)
+    const [text, setText] = useState(<p>test box</p>)
     return <>
         <Head>
             <title>Demo</title>
@@ -65,6 +65,16 @@ function User(props) {
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
 
+    // const handleGetUser = async (name) => {
+    //     try {
+    //         let response = await fetch("http://localhost:3000/api/findUser?id=" + name);
+    //         response = await response.json();
+    //         return response
+    //     } catch (error) {
+    //         console.log("An error occurred while fetching ", error);
+    //     }
+    // };
+
     useFrame((_, delta) => {
         keyMap['KeyA'] && (mesh.current.position.x -= 3 * delta)
         keyMap['KeyD'] && (mesh.current.position.x += 3 * delta)
@@ -73,8 +83,9 @@ function User(props) {
         const intersections = raycast()
         if((intersections.length === 1) && (touched === 0)) {
             setTouched(1)
-
-            props.setText(<p>done<br/>hooray!</p>)
+            const user = getUser("init2")
+            console.log(user)
+            props.setText(<p>q<br/>hooray!</p>)
             console.log("complete")
         }
     })
@@ -102,4 +113,9 @@ const useForwardRaycast = (obj) => {
         raycaster.set(obj.current.getWorldPosition(pos), obj.current.getWorldDirection(dir))
         return raycaster.intersectObjects(scene.children)
     }
+}
+
+async function getUser(name) {
+    const info = await fetch("../api/findUser?name="+name)
+    return info
 }
