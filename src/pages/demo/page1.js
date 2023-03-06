@@ -6,8 +6,9 @@ import { OrthographicCamera } from "@react-three/drei";
 import { useRef, useState, useMemo, useEffect } from "react";
 import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
+import clientPromise from "@/lib/mongodb";
 
-export default function Page0() {
+export default function Page1({user}) {
     const [text, setText] = useState(<p>test box</p>)
     return <>
         <Head>
@@ -43,7 +44,7 @@ export default function Page0() {
                         bottom={-2}
                         position={[0, 0, 8]}
                     />
-                    <User setText={setText}/>
+                    <User setText={setText} text={user}/>
                     <mesh position={[0, 1, 0]}>
                         <boxGeometry args={[0.4, 0.4, 0.4]} />
                         <meshStandardMaterial color="green" side={DoubleSide}/>
@@ -66,18 +67,56 @@ export default function Page0() {
 //     return { info: info}
 // }
 
+// async function getUser(name) {
+
+//     let loginData = await fetch("../api/findUser?name="+name, { method : 'POST' }) // headers : headerParams, body: bodyParams 
+//         .then((response) => response.json())
+//         .then(data => {
+//             //return data['retrieve-agent'];
+//             return data
+//         });
+//     // console.log('loginData ===>', loginData.agent);
+//     return {
+//         type: 'GET_AGENT_DETAILS',
+//         payload: loginData
+//     }
+
+// }
+
+export async function getServerSideProps() {
+    try {
+        const client = await clientPromise;
+        const db = client.db("data");
+
+        const user = await db
+            .collection("users")
+            .find({})
+            .limit(1)
+            .toArray();
+
+        return {
+            props: { user: JSON.parse(JSON.stringify(user)) },
+        };
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 function User(props) {
     const mesh = useRef(null)
     const keyMap = useKeyboard()
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
-    const [data, setData] = useState();
 
-    useEffect(() => {
-        fetch("../api/findUser?name="+"init").then(response => {
-            setData(response.json())
-        })
-    }, [])
+    //const { payload } = getUser("init2")
+
+    // const [data, setData] = useState();
+
+    // useEffect(() => {
+    //     fetch("../api/findUser?name="+"init").then(response => {
+    //         setData(response.json())
+    //     })
+    // }, [])
 
     // const handleGetUser = async (name) => {
     //     try {
@@ -88,7 +127,7 @@ function User(props) {
     //         console.log("An error occurred while fetching ", error);
     //     }
     // };
-    
+
     useFrame((_, delta) => {
         keyMap['KeyA'] && (mesh.current.position.x -= 3 * delta)
         keyMap['KeyD'] && (mesh.current.position.x += 3 * delta)
@@ -97,10 +136,9 @@ function User(props) {
         const intersections = raycast()
         if((intersections.length === 1) && (touched === 0)) {
             setTouched(1)
-            //const user = getUser("init2")
-            console.log(data)
+            console.log(props.text)
             //console.log(user["<value>"])
-            props.setText(<p>{JSON.stringify(data)}<br/>hooray!</p>)
+            props.setText(<p>{props.text[0].name}<br/>hooray!</p>)
             console.log("complete")
         }
     })
