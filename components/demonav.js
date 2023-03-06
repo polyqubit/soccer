@@ -12,7 +12,7 @@ export default function DemoNavigation(props) {
             </Link>
             <div>
                 <p className={styles.title}>
-                    test
+                    {props.words}
                 </p>
             </div>
             <Link

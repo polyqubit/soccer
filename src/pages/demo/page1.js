@@ -1,5 +1,6 @@
 import Head from "next/head";
 import DemoNavigation from "@/components/demonav";
+import useKeyboard from "@/components/useKeyboard";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { useRef } from "react";
@@ -20,30 +21,14 @@ export default function Page0() {
                 >
                     <ambientLight intensity={0.2} />
                     <pointLight
-                        position={[1, 0.5, 2]}
+                        position={[0, 0, 2]}
                         intensity={2}
-                        color="blue"
-                    />
-                    <pointLight
-                        position={[-0.6, 0.5, 2]}
-                        intensity={2}
-                        color="red"
-                    />
-                    <pointLight
-                        position={[0, 2, 3]}
-                        intensity={0.1}
                         color="white"
                     />
-                    <pointLight
-                        position={[-1, 4, 1]}
-                        intensity={0.8}
-                        color="yellow"
-                    />
                     <mesh>
-                        <sphereGeometry />
-                        <meshStandardMaterial />
+                        <planeGeometry args={[200,200]}/>
+                        <meshBasicMaterial color="gray"/>
                     </mesh>
-                    <Donut />
                     <OrbitControls />
                     <OrthographicCamera 
                         makeDefault
@@ -54,29 +39,37 @@ export default function Page0() {
                         bottom={-2}
                         position={[0,0,2]}
                     />
+                    <User />
                 </Canvas>
             </div>
             <DemoNavigation 
-                back="/"
-                forward="/demo/page1"
-                words="test"
+                back="/demo/page0"
+                forward="/demo/page2"
+                words="api get"
             />
         </main>
     </>
 }
 
-function Donut(props) {
+function User(props) {
     const mesh = useRef()
-    useFrame((state, delta) => (mesh.current = delta))
+    const keyMap = useKeyboard()
+
+    useFrame((_, delta) => {
+        keyMap['KeyA'] && (mesh.current.position.x -= 2 * delta)
+        keyMap['KeyD'] && (mesh.current.position.x += 2 * delta)
+        keyMap['KeyW'] && (mesh.current.position.y += 2 * delta)
+        keyMap['KeyS'] && (mesh.current.position.y -= 2 * delta)
+    })
+
     return <>
         <mesh
             {...props}
             ref={mesh}
-            rotation={[Math.PI / 2, 0, 0]}
             position={[0, 0, 0]}
         >
-            <torusGeometry args={[1.4, 0.1, 100, 100]} />
-            <meshStandardMaterial />
+            <boxGeometry />
+            <meshStandardMaterial color="white"/>
         </mesh>
     </>
 }
