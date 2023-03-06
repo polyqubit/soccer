@@ -2,8 +2,8 @@ import Head from "next/head";
 import DemoNavigation from "@/components/demonav";
 import useKeyboard from "@/components/useKeyboard";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, OrthographicCamera } from "@react-three/drei";
-import { useRef, useState, useMemo } from "react";
+import { OrthographicCamera } from "@react-three/drei";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 
@@ -59,11 +59,25 @@ export default function Page0() {
     </>
 }
 
+// async function getUser(name) {
+//     const info = await fetch("../api/findUser?name="+name)
+//         .then(response => response.json())
+//         .then(response => JSON.stringify(response))
+//     return { info: info}
+// }
+
 function User(props) {
     const mesh = useRef(null)
     const keyMap = useKeyboard()
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
+    const [data, setData] = useState();
+
+    useEffect(() => {
+        fetch("../api/findUser?name="+"init").then(response => {
+            setData(response.json())
+        })
+    }, [])
 
     // const handleGetUser = async (name) => {
     //     try {
@@ -74,7 +88,7 @@ function User(props) {
     //         console.log("An error occurred while fetching ", error);
     //     }
     // };
-
+    
     useFrame((_, delta) => {
         keyMap['KeyA'] && (mesh.current.position.x -= 3 * delta)
         keyMap['KeyD'] && (mesh.current.position.x += 3 * delta)
@@ -83,9 +97,10 @@ function User(props) {
         const intersections = raycast()
         if((intersections.length === 1) && (touched === 0)) {
             setTouched(1)
-            const user = getUser("init2")
-            console.log(user)
-            props.setText(<p>q<br/>hooray!</p>)
+            //const user = getUser("init2")
+            console.log(data)
+            //console.log(user["<value>"])
+            props.setText(<p>{JSON.stringify(data)}<br/>hooray!</p>)
             console.log("complete")
         }
     })
@@ -113,9 +128,4 @@ const useForwardRaycast = (obj) => {
         raycaster.set(obj.current.getWorldPosition(pos), obj.current.getWorldDirection(dir))
         return raycaster.intersectObjects(scene.children)
     }
-}
-
-async function getUser(name) {
-    const info = await fetch("../api/findUser?name="+name)
-    return info
 }
