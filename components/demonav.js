@@ -6,7 +6,7 @@ export default function DemoNavigation(props) {
         <div className={styles.container}>
             <Link
                 className={styles.back}
-                href="/"
+                href={props.back}
             >
                 &larr;backward
             </Link>
@@ -17,7 +17,7 @@ export default function DemoNavigation(props) {
             </div>
             <Link
                 className={styles.forward}
-                href="/demo/page1"
+                href={props.forward}
             >
                 forward&rarr;
             </Link>

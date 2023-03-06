@@ -56,7 +56,10 @@ export default function Page0() {
                     />
                 </Canvas>
             </div>
-            <DemoNavigation />
+            <DemoNavigation 
+                back="/"
+                forward="/demo/page1"
+            />
         </main>
     </>
 }
