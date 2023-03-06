@@ -17,3 +17,18 @@
 .scene {
     height: 80vh;
 }
+
+.follow {
+    position: absolute;
+    color: black;
+    z-index: 100;
+    border: 2px solid black;
+    background: #FCF0CC;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }

@@ -1,22 +1,22 @@
 import Head from "next/head";
 import DemoNavigation from "@/components/demonav";
 import useKeyboard from "@/components/useKeyboard";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
-import { useRef, useState } from "react";
-import { useMemo } from "react";
-import { Raycaster } from "three";
-import { useThree } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { DoubleSide } from "three";
+import { useRef, useState, useMemo } from "react";
+import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 
 export default function Page0() {
+    const [text, setText] = useState(<p>hi</p>)
     return <>
         <Head>
             <title>Demo</title>
         </Head>
         <main>
+            <div className={styles.follow}>
+                {text}
+            </div>
             <div
                 className={styles.scene}
             >
@@ -34,7 +34,6 @@ export default function Page0() {
                         <planeGeometry args={[200, 200]} />
                         <meshBasicMaterial color="gray" />
                     </mesh>
-                    <OrbitControls />
                     <OrthographicCamera
                         makeDefault
                         zoom={1}
@@ -44,7 +43,7 @@ export default function Page0() {
                         bottom={-2}
                         position={[0, 0, 8]}
                     />
-                    <User />
+                    <User setText={setText}/>
                     <mesh position={[0, 1, 0]}>
                         <boxGeometry args={[0.4, 0.4, 0.4]} />
                         <meshStandardMaterial color="green" side={DoubleSide}/>
@@ -74,6 +73,8 @@ function User(props) {
         const intersections = raycast()
         if((intersections.length === 1) && (touched === 0)) {
             setTouched(1)
+
+            props.setText(<p>done<br/>hooray!</p>)
             console.log("complete")
         }
     })
