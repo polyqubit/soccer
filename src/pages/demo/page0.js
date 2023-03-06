@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Link from "next/link";
+import DemoNavigation from "@/components/demonav";
 import { Canvas } from "@react-three/fiber";
 import styles from "@styles/Demo.module.css"
 
@@ -20,13 +20,18 @@ export default function Page0() {
                     }}
                 >
                     <ambientLight intensity={0.2} />
-                    <pointLight position={[1,2,0]} intensity={0.5}/>
+                    <pointLight
+                        position={[1,2,1]}
+                        intensity={0.5}
+                        color="blue"
+                    />
                     <mesh>
                         <sphereGeometry />
                         <meshStandardMaterial />
                     </mesh>
                 </Canvas>
             </div>
+            <DemoNavigation />
         </main>
     </>
 }

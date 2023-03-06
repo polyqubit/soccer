@@ -4,13 +4,6 @@
     clear: both;
 }
 
-.back {
-    background-color: white;
-    padding: 10px;
-    color: black;
-    float: left;
-}
-
 .testButton {
     position: relative;
     font-size: larger;
@@ -22,7 +15,5 @@
 }
 
 .scene {
-    height: 70vh;
-    width: 80%;
-    margin-left: 10%;
+    height: 80vh;
 }
