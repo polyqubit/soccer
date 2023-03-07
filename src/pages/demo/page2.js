@@ -3,12 +3,12 @@ import DemoNavigation from "@/components/demonav";
 import useKeyboard from "@/components/useKeyboard";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
-import { useRef, useState, useMemo, use } from "react";
+import { useRef, useState, useMemo } from "react";
 import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 import clientPromise from "@/lib/mongodb";
 
-export default function Page1({user}) {
+export default function Page1({ user }) {
     const [text, setText] = useState(<p>test box</p>)
     return <>
         <Head>
@@ -31,6 +31,7 @@ export default function Page1({user}) {
                         intensity={2}
                         color="white"
                     />
+                    <User />
                     <mesh>
                         <planeGeometry args={[200, 200]} />
                         <meshBasicMaterial color="gray" />
@@ -45,12 +46,7 @@ export default function Page1({user}) {
                         position={[0, 0, 8]}
                     />
                     <OrbitControls />
-                    <User side={DoubleSide} setText={setText} text={user}/>
-                    {/* <mesh position={[0, 1, 0]}>
-                        <boxGeometry args={[0.4, 0.4, 0.4]} />
-                        <meshStandardMaterial color="green" side={DoubleSide}/>
-                    </mesh> */}
-                    <CreateUser />
+                    <CreateUser setText={setText} text={user} />
                 </Canvas>
             </div>
             <DemoNavigation
@@ -97,9 +93,10 @@ function User(props) {
             {...props}
             ref={mesh}
             position={[0, 0, 0.1]}
+            name="userBox"
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial color="white" />
+            <meshStandardMaterial side={DoubleSide} color="white" />
         </mesh>
     </>
 }
@@ -109,23 +106,15 @@ function CreateUser(props) {
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
 
-    useFrame((_, __) => {
+    useFrame((_, delta) => {
         const intersections = raycast()
         //console.log(intersections)
-        if((intersections.length > 0) && (touched === 0)) {
+        if ((intersections.length > 0) && (touched === 0)) {
             setTouched(1)
-            // console.log(props.text)
-            // //console.log(user["<value>"])
-            // props.setText(
-            //     <p>
-            //         created user!
-            //     </p>
-            // )
+            mesh.current.position.z = -1
+            
             console.log("complete")
         }
-    })
-
-    useFrame((_, delta) => {
         mesh.current.rotation.z += delta
     })
 
@@ -136,7 +125,7 @@ function CreateUser(props) {
             position={[-1, 1, 0]}
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial color="blue" />
+            <meshStandardMaterial side={DoubleSide} color="blue" />
         </mesh>
     </>
 }
@@ -150,6 +139,7 @@ const useForwardRaycast = (obj) => {
     return () => {
         if (!obj.current) return []
         raycaster.set(obj.current.getWorldPosition(pos), obj.current.getWorldDirection(dir))
-        return raycaster.intersectObjects(scene.children)
+        let user = scene.getObjectByName("userBox")
+        return raycaster.intersectObject(user, true)
     }
 }
