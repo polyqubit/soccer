@@ -3,7 +3,7 @@ import DemoNavigation from "@/components/demonav";
 import useKeyboard from "@/components/useKeyboard";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, use } from "react";
 import { Raycaster, Vector3, DoubleSide } from "three";
 import styles from "@styles/Demo.module.css"
 import clientPromise from "@/lib/mongodb";
@@ -45,12 +45,12 @@ export default function Page1({user}) {
                         position={[0, 0, 8]}
                     />
                     <OrbitControls />
-                    <User setText={setText} text={user} side={DoubleSide}/>
+                    <User side={DoubleSide} setText={setText} text={user}/>
                     {/* <mesh position={[0, 1, 0]}>
                         <boxGeometry args={[0.4, 0.4, 0.4]} />
                         <meshStandardMaterial color="green" side={DoubleSide}/>
                     </mesh> */}
-                    <CreateUser/>
+                    <CreateUser />
                 </Canvas>
             </div>
             <DemoNavigation
@@ -109,20 +109,24 @@ function CreateUser(props) {
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
 
-    useFrame((_, delta) => {
-        mesh.current.rotation.z += delta
+    useFrame((_, __) => {
         const intersections = raycast()
+        //console.log(intersections)
         if((intersections.length > 0) && (touched === 0)) {
             setTouched(1)
-            console.log(props.text)
-            //console.log(user["<value>"])
-            props.setText(
-                <p>
-                    created user!
-                </p>
-            )
+            // console.log(props.text)
+            // //console.log(user["<value>"])
+            // props.setText(
+            //     <p>
+            //         created user!
+            //     </p>
+            // )
             console.log("complete")
         }
+    })
+
+    useFrame((_, delta) => {
+        mesh.current.rotation.z += delta
     })
 
     return <>
