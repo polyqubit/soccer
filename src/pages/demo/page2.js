@@ -45,9 +45,9 @@ export default function Page1({ user }) {
                         bottom={-2}
                         position={[0, 0, 8]}
                     />
-                    <OrbitControls />
-                    <APIBox setText={setText} text={user} color="blue" position={[-1,1,0]} />
-                    <APIBox setText={setText} text={user} color="green" position={[1,-1,0]} />
+                    <OrbitControlsToggle />
+                    <CreateUser color="blue" position={[-1,1,0]} />
+                    <EditPass setText={setText} text={user} color="green" position={[1,-1,0]} />
                 </Canvas>
             </div>
             <DemoNavigation
@@ -76,6 +76,17 @@ export async function getServerSideProps() {
     } catch (e) {
         console.error(e);
     }
+}
+
+function OrbitControlsToggle() {
+    const [show, setShow] = useState(false)
+    const keyMap = useKeyboard()
+
+    useFrame((_, delta) => {
+        if(keyMap['KeyQ'] && !show) setShow(true)
+    })
+
+    return show && <OrbitControls />
 }
 
 function User(props) {
@@ -108,7 +119,7 @@ function User(props) {
     </>
 }
 
-function APIBox(props) {
+function CreateUser(props) {
     const mesh = useRef(null)
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
@@ -124,7 +135,41 @@ function APIBox(props) {
                 alert("name not long enough")
             }
             else
-                //fetch("../api/createUser?name=" + name)
+                fetch("../api/createUser?name=" + name)
+            console.log("complete")
+        }
+        mesh.current.rotation.z += delta
+    })
+
+    return <>
+        <mesh
+            {...props}
+            ref={mesh}
+            position={props.position}
+        >
+            <boxGeometry args={[0.4, 0.4, 0.4]} />
+            <meshStandardMaterial side={DoubleSide} color={props.color} />
+        </mesh>
+    </>
+}
+
+function EditPass(props) {
+    const mesh = useRef(null)
+    const raycast = useForwardRaycast(mesh)
+    const [touched, setTouched] = useState(0)
+
+    useFrame((_, delta) => {
+        const intersections = raycast()
+        //console.log(intersections)
+        if ((intersections.length > 0) && (touched === 0)) {
+            setTouched(1)
+            mesh.current.position.z = -1
+            let name = prompt("Enter password: ")
+            if((name === null) || (name.length < 3)) {
+                alert("name not long enough")
+            }
+            else
+                fetch("../api/createUser?name=" + name)
             console.log("complete")
         }
         mesh.current.rotation.z += delta
