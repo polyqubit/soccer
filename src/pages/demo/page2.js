@@ -46,7 +46,8 @@ export default function Page1({ user }) {
                         position={[0, 0, 8]}
                     />
                     <OrbitControls />
-                    <CreateUser setText={setText} text={user} />
+                    <APIBox setText={setText} text={user} color="blue" position={[-1,1,0]} />
+                    <APIBox setText={setText} text={user} color="green" position={[1,-1,0]} />
                 </Canvas>
             </div>
             <DemoNavigation
@@ -86,13 +87,19 @@ function User(props) {
         keyMap['KeyD'] && (mesh.current.position.x += 3 * delta)
         keyMap['KeyW'] && (mesh.current.position.y += 3 * delta)
         keyMap['KeyS'] && (mesh.current.position.y -= 3 * delta)
+
+        if(((mesh.current.position.x < -5)||(mesh.current.position.x > 5))
+        || (mesh.current.position.y < -3)||(mesh.current.position.y > 3)) {
+            mesh.current.position.x = 0
+            mesh.current.position.y = 0
+        }
     })
 
     return <>
         <mesh
             {...props}
             ref={mesh}
-            position={[0, 0, 0.1]}
+            position={props.position}
             name="userBox"
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
@@ -101,7 +108,7 @@ function User(props) {
     </>
 }
 
-function CreateUser(props) {
+function APIBox(props) {
     const mesh = useRef(null)
     const raycast = useForwardRaycast(mesh)
     const [touched, setTouched] = useState(0)
@@ -112,7 +119,12 @@ function CreateUser(props) {
         if ((intersections.length > 0) && (touched === 0)) {
             setTouched(1)
             mesh.current.position.z = -1
-            
+            let name = prompt("Enter name of user: ")
+            if((name === null) || (name.length < 3)) {
+                alert("name not long enough")
+            }
+            else
+                //fetch("../api/createUser?name=" + name)
             console.log("complete")
         }
         mesh.current.rotation.z += delta
@@ -122,10 +134,10 @@ function CreateUser(props) {
         <mesh
             {...props}
             ref={mesh}
-            position={[-1, 1, 0]}
+            position={props.position}
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial side={DoubleSide} color="blue" />
+            <meshStandardMaterial side={DoubleSide} color={props.color} />
         </mesh>
     </>
 }
