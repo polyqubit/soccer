@@ -9,15 +9,12 @@ import styles from "@styles/Demo.module.css"
 import clientPromise from "@/lib/mongodb";
 
 export default function Page1({ user }) {
-    const [text, setText] = useState(<p>test box</p>)
+    const [UID, setUID] = useState(0)
     return <>
         <Head>
             <title>Demo</title>
         </Head>
         <main>
-            <div className={styles.follow}>
-                {text}
-            </div>
             <div
                 className={styles.scene}
             >
@@ -46,8 +43,8 @@ export default function Page1({ user }) {
                         position={[0, 0, 8]}
                     />
                     <OrbitControlsToggle />
-                    <CreateUser color="blue" position={[-1,1,0]} />
-                    <EditPass setText={setText} text={user} color="green" position={[1,-1,0]} />
+                    <CreateUser setUID={setUID} color="blue" position={[-1,1,0]} />
+                    <EditPass color="green" position={[1,-1,0]} />
                 </Canvas>
             </div>
             <DemoNavigation
@@ -134,8 +131,13 @@ function CreateUser(props) {
             if((name === null) || (name.length < 3)) {
                 alert("name not long enough")
             }
-            else
+            else {
                 fetch("../api/createUser?name=" + name)
+                    .then((response) => response.json())
+                    .then((body) => body.user.insertedId)
+                console.log(id)
+                props.setUID(id)
+            }
             console.log("complete")
         }
         mesh.current.rotation.z += delta
@@ -170,6 +172,8 @@ function EditPass(props) {
             }
             else
                 fetch("../api/createUser?name=" + name)
+                    .then((response) => response.json())
+                    .then((body) => console.log(body))
             console.log("complete")
         }
         mesh.current.rotation.z += delta
