@@ -141,7 +141,7 @@ function User(props) {
             props.setText(
                 <p>
                     name: {props.text[0].name}<br/>
-                    password: comp sci jeopardy 5-50(what is encryption??)<br/>
+                    password: {props.text[0].pow}<br/>
                     high score: {props.text[0].sc}
                 </p>
             )

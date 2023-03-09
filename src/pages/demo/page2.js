@@ -9,7 +9,6 @@ import styles from "@styles/Demo.module.css"
 import clientPromise from "@/lib/mongodb";
 
 export default function Page1({ user }) {
-    const [UID, setUID] = useState(0)
     return <>
         <Head>
             <title>Demo</title>
@@ -43,14 +42,13 @@ export default function Page1({ user }) {
                         position={[0, 0, 8]}
                     />
                     <OrbitControlsToggle />
-                    <CreateUser setUID={setUID} color="blue" position={[-1,1,0]} />
-                    <EditPass color="green" position={[1,-1,0]} />
+                    <CreateUser />
                 </Canvas>
             </div>
             <DemoNavigation
                 back="/demo/page1"
                 forward="/"
-                words="create/delete user"
+                words="mongo stuff"
             />
         </main>
     </>
@@ -119,74 +117,85 @@ function User(props) {
 function CreateUser(props) {
     const mesh = useRef(null)
     const raycast = useForwardRaycast(mesh)
-    const [touched, setTouched] = useState(0)
+    const [touched, setTouched] = useState(1)
+    const [id, setID] = useState(0)
 
     useFrame((_, delta) => {
-        const intersections = raycast()
-        //console.log(intersections)
-        if ((intersections.length > 0) && (touched === 0)) {
-            setTouched(1)
-            mesh.current.position.z = -1
-            let name = prompt("Enter name of user: ")
-            if((name === null) || (name.length < 3)) {
-                alert("name not long enough")
+        if(mesh.current) {
+            mesh.current.rotation.z += delta 
+            const intersections = raycast()
+            //console.log(intersections)
+            if ((intersections.length > 0) && (touched !== 0)) {
+                let name = prompt("Enter name of user: ")
+                if(((name === null) || (name.length < 3)) && (touched === 1)) {
+                    alert("name not long enough")
+                    setTouched(-1)
+                }
+                else if(((name === null) || (name.length < 3)) && (touched === -1)) {
+                    alert("name not long enough")
+                    setTouched(1)
+                }
+                else if(touched != 0) {
+                    mesh.current.position.z = -2
+                    setTouched(0)
+                    fetch("../api/createUser?name=" + name)
+                        .then((response) => response.json())
+                        .then((body) => {setID(parseInt(body['user']['insertedId'])); console.log(typeof body['user']['insertedId'])})
+                }
+                console.log(touched)
             }
-            else {
-                fetch("../api/createUser?name=" + name)
-                    .then((response) => response.json())
-                    .then((body) => body.user.insertedId)
-                console.log(id)
-                props.setUID(id)
-            }
-            console.log("complete")
         }
-        mesh.current.rotation.z += delta
     })
 
     return <>
         <mesh
-            {...props}
             ref={mesh}
-            position={props.position}
+            position={[-1,touched,(touched === 0) ? -2 : 0]}
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial side={DoubleSide} color={props.color} />
+            <meshStandardMaterial side={DoubleSide} color="blue" />
         </mesh>
+        {(touched === 0)&&<EditPass id={id}/>}
     </>
 }
 
 function EditPass(props) {
     const mesh = useRef(null)
     const raycast = useForwardRaycast(mesh)
-    const [touched, setTouched] = useState(0)
+    const [touched, setTouched] = useState(1)
 
     useFrame((_, delta) => {
-        const intersections = raycast()
-        //console.log(intersections)
-        if ((intersections.length > 0) && (touched === 0)) {
-            setTouched(1)
-            mesh.current.position.z = -1
-            let name = prompt("Enter password: ")
-            if((name === null) || (name.length < 3)) {
-                alert("name not long enough")
+        if(mesh.current) {
+            mesh.current.rotation.z += delta 
+            const intersections = raycast()
+            //console.log(intersections)
+            if ((intersections.length > 0) && (touched !== 0)) {
+                let pow = prompt("Enter pwd: ")
+                if((pow === null) && (touched === 1)) {
+                    alert("name not long enough")
+                    setTouched(-1)
+                }
+                else if((pow === null) && (touched === -1)) {
+                    alert("name not long enough")
+                    setTouched(1)
+                }
+                else if(touched != 0) {
+                    mesh.current.position.z = -2
+                    setTouched(0)
+                    fetch("../api/editUser?id=" + props.id + "&pow=" + pow)
+                }
+                console.log(touched)
             }
-            else
-                fetch("../api/createUser?name=" + name)
-                    .then((response) => response.json())
-                    .then((body) => console.log(body))
-            console.log("complete")
         }
-        mesh.current.rotation.z += delta
     })
 
     return <>
         <mesh
-            {...props}
             ref={mesh}
-            position={props.position}
+            position={[1.2,(touched*1.1)+0.5,(touched === 0) ? -2 : 0]}
         >
             <boxGeometry args={[0.4, 0.4, 0.4]} />
-            <meshStandardMaterial side={DoubleSide} color={props.color} />
+            <meshStandardMaterial side={DoubleSide} color="green" />
         </mesh>
     </>
 }
